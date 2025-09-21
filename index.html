@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .game {
+        display: block;
+        background: #000;
+        border-radius: 10px;
+        margin: auto;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        width: 800px;
+        height: 600px;
+    }
+</style>
+<body>
+    <canvas id="gameCanvas" class="game" width="800" height = "600"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        console.log(canvas.width, canvas.height);
+        class Ship{
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.width = 40;
+                this.height = 60;
+                this.color = 'white';
+                this.speed = 5;
+                this.bullets = [];
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(this.x - this.width / 2, this.y + this.height);
+                ctx.lineTo(this.x + this.width / 2, this.y + this.height);
+                ctx.closePath();
+                ctx.fill();
+            }
+        }
+        const ship = new Ship(canvas.width / 2, canvas.height - 70);
+        ship.draw();
+    </script>
+</body>
+</html>
