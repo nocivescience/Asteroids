@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <style>
-    body, html {
+    body,
+    html {
         margin: 0;
         padding: 0;
         overflow: hidden;
@@ -16,23 +18,25 @@
         justify-content: center;
         align-items: center;
     }
+
     .game {
         display: block;
         background: #000;
         border-radius: 10px;
         margin: auto;
-        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         width: 800px;
         height: 600px;
     }
 </style>
+
 <body>
-    <canvas id="gameCanvas" class="game" width="800" height = "600"></canvas>
+    <canvas id="gameCanvas" class="game" width="800" height="600"></canvas>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         console.log(canvas.width, canvas.height);
-        class Ship{
+        class Ship {
             constructor(x, y) {
                 this.x = x;
                 this.y = y;
@@ -40,20 +44,66 @@
                 this.height = 60;
                 this.color = 'white';
                 this.speed = 5;
+                this.angle = 0;
+                this.angleSpeed = 1;
                 this.bullets = [];
+                this.rotateLeftButton = false;
+                this.rotateRightButton = false;
             }
             draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle*Math.PI/180);
                 ctx.fillStyle = this.color;
                 ctx.beginPath();
-                ctx.moveTo(this.x, this.y);
-                ctx.lineTo(this.x - this.width / 2, this.y + this.height);
-                ctx.lineTo(this.x + this.width / 2, this.y + this.height);
+                ctx.moveTo(0, -this.height / 2);
+                ctx.lineTo(this.width / 2, this.height / 2);
+                ctx.lineTo(-this.width / 2, this.height / 2);
                 ctx.closePath();
                 ctx.fill();
+                ctx.restore();
+            }
+            rotateLeft() {
+                this.angle -= this.angleSpeed;
+                return this.angle;
+            }
+            rotateRight() {
+                this.angle += this.angleSpeed
+                return this.angle;
             }
         }
+        function update() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (ship.rotateLeftButton) {
+                ship.rotateLeft();
+            }
+            if (ship.rotateRightButton) {
+                ship.rotateRight();
+            }
+            ship.draw();
+            requestAnimationFrame(update);
+        }
         const ship = new Ship(canvas.width / 2, canvas.height - 70);
-        ship.draw();
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'a') {
+                ship.rotateLeftButton = true;
+                console.log(ship.rotateLeftButton);
+            } else if (event.key === 'd') {
+                ship.rotateRightButton = true;
+                console.log(ship.rotateRightButton);
+            }
+        });
+        document.addEventListener('keyup', (event) => {
+            if (event.key === 'a') {
+                ship.rotateLeftButton = false;
+                console.log(ship.rotateLeft());
+            } else if (event.key === 'd') {
+                ship.rotateRightButton = false;
+                console.log(ship.rotateRight());
+            }
+        });
+        update();
     </script>
 </body>
+
 </html>
